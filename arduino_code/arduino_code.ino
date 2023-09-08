@@ -42,4 +42,11 @@ void loop() {
     tone(buzzer,16, 50);
     timer = millis();
     }
+  if(Serial.available()){
+    cmd = Serial.read();
+    if (cmd == 'A')
+      digitalWrite(13, HIGH);
+    else if (cmd == 'a')
+      digitalWrite(13, LOW);
+  }
 }
