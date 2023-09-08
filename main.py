@@ -1,15 +1,20 @@
 import os
-import threading
-
 import serial
+import threading
+from selenium import webdriver
+
+command = 0
+array = [0, 0, 0, 0]
 
 speaker = os.getcwd() + "\\BAT\\Speaker.bat"
 earphone = os.getcwd() + "\\BAT\\Earphone.bat"
 headset = os.getcwd() + "\\BAT\\Headset.bat"
 
+chromedriver_path = os.getcwd() + "\chromedriver.exe"
+
 def speaker_control():
-    command = 0
-    array = [0, 0, 0, 0]
+    global command, array
+
     count = 0
     loop = True
     info_data = 0
@@ -58,8 +63,28 @@ def speaker_control():
             if info_data > 30:
                 info_data = 0
 
+def selenium_control():
+    driver = webdriver.Chrome(chromedriver_path)
+    driver.set_window_size(984, 945)
+    driver.get("https://www.naver.com/")
+
+    while True:
+        if command == "1":
+            print("selenium_control activated")
+        elif command == "2":
+            print("selenium_control close")
+            driver.close()
+
 if __name__ == "__main__":
     speaker_control_thread = threading.Thread(target=speaker_control)
+    selenium_control_thread = threading.Thread(target=selenium_control)
+
+
+
     speaker_control_thread.start()
+    selenium_control_thread.start()
+
+
     speaker_control_thread.join()
+    selenium_control_thread.join()
     print("End of Program")
